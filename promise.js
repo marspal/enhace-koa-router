@@ -1,84 +1,48 @@
 class Promise{
-  constructor(executor){
-    if(typeof executor !== 'function'){
-      throw new TypeError(`Promise resolver ${executor} is not a function`)
-    }
+  constructor(excutor){
     this.state = 'pending';
     this.value = undefined;
     this.reason = undefined;
     this.onResolvedCallbacks = [];
     this.onRejectedCallbacks = [];
+    // 成功
     const resolve = (value) => {
       if(this.state === 'pending'){
         this.state = 'fulfilled';
         this.value = value;
         this.onResolvedCallbacks.forEach(fn => fn());
       }
-    }
+    } 
+    // 失败
     const reject = (reason) => {
       if(this.state === 'pending'){
-        this.reason = reason;
         this.state = 'rejected';
+        this.reason = reason;
         this.onRejectedCallbacks.forEach(fn => fn());
       }
     }
-    executor(resolve, reject);
+    try {
+      excutor(resolve, reject);
+    } catch(err) {
+      reject(err);
+    }
   }
   then(onFulfilled, onRejected){
-    const p2 = new Promise((resolve, reject) => {
-      if(this.state === 'fulfilled'){
-        setTimeout(()=>{
-          const x = onFulfilled(this.value);
-          resolvePromise(p2, x, resolve, reject); // promise || 123 | '1234';
-        }, 0)
-          
-      }
-      if(this.state === 'rejected'){
-        setTimeout(() => {
-          const x = onRejected(this.reason);
-          resolvePromise(p2, x, resolve, reject); // promise || 123 | '1234';
-        }, 0);
-      }
-
-      if(this.state === 'pending'){
-        this.onResolvedCallbacks.push(() => {
-          setTimeout(() => { // 为什么要加setTimeout
-            const x = onFulfilled(this.value);
-            resolvePromise(p2, x, resolve, reject); 
-          }, 0);
-        });
-        this.onRejectedCallbacks.push(() => {
-          setTimeout(()=> {
-            const x = onRejected(this.reason);
-            resolvePromise(p2, x, resolve, reject); 
-          }, 0);
-        });
-      }
-    });
-    return p2;
-  }
-}
-
-const resolvePromise = (p2, x, resolve, reject) => {
-  if(p2 === x){
-    return reject(new TypeError('循环引用'));
-  }
-  if(x !== null && (typeof x === 'function' || typeof x === 'object')){
-    try {
-      const then = x.then;
-      if(typeof then === 'function'){ // promise
-        then.call(x, y => {
-          // resolve(y)
-          resolvePromise(p2, y, resolve, reject);
-        }, r => {
-          reject(r)
-        });
-      }
-    } catch(error) {
-      reject(error);
+    if(this.state === 'fulfilled'){
+      onFulfilled(this.value);
     }
-  } else {
-    resolve(x);
+    if(this.state === 'rejected'){
+      onRejected(this.reason);
+    }
+    if(this.state === 'pending'){
+      this.onRejectedCallbacks.push(() => {
+        onRejected(this.reason)
+      });
+      this.onResolvedCallbacks.push(()=> {
+        console.log(this.value, 'aaaa');
+        onFulfilled(this.value)
+      });
+    }
   }
 }
 
