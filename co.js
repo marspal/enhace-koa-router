@@ -58,4 +58,46 @@ function test(){
   });
 }
 
-test(); // promise  status = pending?
+// test(); // promise  status = pending?
+
+// function foo(a){
+//   var b = a * 2;
+//   function bar(c){
+//     console.log(a,b,c);
+//   }
+//   bar(b * 3);
+// }
+// foo(2);
+function foo(){
+  var a = 2;
+  function baz(){
+    console.log(a); // RHS查询 词法作用域查找规则
+  }
+  // bar();
+  // return bar;
+  bar(baz);
+}
+// foo();
+
+// var baz = foo();
+// baz();
+
+function bar(fn){
+  fn();
+}
+
+// foo();
+
+// console.log(a);
+var obj = {
+  id: "awesome",
+  cool: function coolFn() {
+    console.log(this)
+    console.log( this.id );
+  }
+};
+var id = "not awesome"
+obj.cool(); // 酷
+setTimeout( obj.cool, 100 ); // 不酷
+
+// 关于this

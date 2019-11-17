@@ -87,12 +87,12 @@ function resolvePromise(promise2, x, resolve, reject){
   }
 }
 
+// promise = Promise.resolve("aaa");
 Promise.resolve = function(value){
   return new Promise((resolve, reject) => {
     resolve(value);
   });
 }
-
 Promise.reject = function(err){
   return new Promise((resolve, reject) => {
     reject(err);
@@ -115,8 +115,6 @@ Promise.all = function(promises){
     i ++;
 
     if(i == promises.length){
-      console.log(arr, 'sss');
-      console.log(resolve, 'sss');
       resolve(arr);
     }
   }
