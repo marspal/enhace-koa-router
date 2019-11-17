@@ -101,3 +101,43 @@ obj.cool(); // 酷
 setTimeout( obj.cool, 100 ); // 不酷
 
 // 关于this
+test(); // promise  status = pending?
+
+async function async1() {
+  console.log(1);
+  const result = await async2();
+  console.log(3);
+}
+
+async function async2() {
+  console.log(2);
+}
+
+Promise.resolve().then(() => {
+  console.log(4);
+});
+
+setTimeout(() => {
+  console.log(5);
+});
+
+async1();
+console.log(6);
+
+// function foo(){
+//   var a = 2;
+//   this.bar();
+// }
+
+// function bar(){
+//   console.log(this.a);
+// }
+
+// foo();
+function foo() { console.log( this.a );
+}
+var a = 2;
+(function(){
+  "use strict";
+  foo(); // 2
+})();
