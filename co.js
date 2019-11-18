@@ -89,40 +89,30 @@ function bar(fn){
 // foo();
 
 // console.log(a);
-var obj = {
-  id: "awesome",
-  cool: function coolFn() {
-    console.log(this)
-    console.log( this.id );
-  }
-};
-var id = "not awesome"
-obj.cool(); // 酷
-setTimeout( obj.cool, 100 ); // 不酷
 
 // 关于this
-test(); // promise  status = pending?
+// test(); // promise  status = pending?
 
-async function async1() {
-  console.log(1);
-  const result = await async2();
-  console.log(3);
-}
+// async function async1() {
+//   console.log(1);
+//   const result = await async2();
+//   console.log(3);
+// }
 
-async function async2() {
-  console.log(2);
-}
+// async function async2() {
+//   console.log(2);
+// }
 
-Promise.resolve().then(() => {
-  console.log(4);
-});
+// Promise.resolve().then(() => {
+//   console.log(4);
+// });
 
-setTimeout(() => {
-  console.log(5);
-});
+// setTimeout(() => {
+//   console.log(5);
+// });
 
-async1();
-console.log(6);
+// async1();
+// console.log(6);
 
 // function foo(){
 //   var a = 2;
@@ -134,10 +124,60 @@ console.log(6);
 // }
 
 // foo();
-function foo() { console.log( this.a );
+// function foo() { console.log( this.a );
+// }
+// var a = 2;
+// (function(){
+//   "use strict";
+//   foo(); // 2
+// })();
+
+
+// var id = "not awesome";
+// console.log(obj.cool());
+// setTimeout(obj.cool, 100);
+function identify(){
+  return this.name.toUpperCase();
 }
-var a = 2;
-(function(){
-  "use strict";
-  foo(); // 2
-})();
+function speak() {
+  var greeting = "Hello, I'm " + identify.call(this);
+  console.log(greeting);
+}
+
+var me = {
+  name: 'Kyle'
+};
+
+var you = {
+  name: "Reader"
+}
+
+// console.log(identify.call(me));
+// console.log(identify.call(you));
+
+// speak.call(me);
+// speak.call(you);
+function foo(){
+  var a = 2;
+  this.bar();
+}
+
+function bar(){
+  console.log(this.a);
+}
+
+// foo();
+function foo(){
+  console.log(this.a);
+}
+var obj2 = {
+  a: 41,
+  foo: foo,
+}
+var obj1 = {
+  a: 2,
+  obj2,
+}
+obj1.obj2.foo();
+
+// 2.2.4 new 绑定
