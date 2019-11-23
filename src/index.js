@@ -1,10 +1,9 @@
   
 const Koa = require("koa");
-const Router = require('koa-router');
 const {resolve} = require("path");
 const R = require("ramda");
 
-const MIDDLEWARES = ['router'];
+const MIDDLEWARES = ['common','router'];
 
 const useMiddlewares = async (app) => {
   R.map(
@@ -18,14 +17,9 @@ const useMiddlewares = async (app) => {
   )(MIDDLEWARES)
 }
 ;(async () => {
-  const app = new Koa();
-  const router = new Router();
-  router.get('/', (ctx, next) => {
-    ctx.body = {
-      status: 'success'
-    }
-  });
-  
+  const app = new Koa();  
   await useMiddlewares(app)
-  app.listen(8080)
+  app.listen(8080, ()=> {
+    console.log('server');
+  })
 })();
